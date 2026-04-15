@@ -24,8 +24,7 @@ export async function transcribe(oggPath: string): Promise<string> {
       },
     });
 
-    const segments = Array.isArray(result) ? result : [{ speech: result }];
-    return segments.map((seg: { speech: string }) => seg.speech).join(" ").trim();
+    return result.trim();
   } finally {
     await unlink(wavPath).catch(() => {});
   }
