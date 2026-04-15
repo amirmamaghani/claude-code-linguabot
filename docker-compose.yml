@@ -1,15 +1,14 @@
-version: "3.8"
 services:
-  linguabot:
+  bot-amir:
     build: .
     restart: unless-stopped
-    env_file: .env
-    volumes:
-      - ~/.claude:/root/.claude:ro
-      - ~/.claude.json:/root/.claude.json:ro
-      - whisper-cache:/root/.cache
+    env_file: .env.bot-amir
     tmpfs:
       - /tmp:size=512M
 
-volumes:
-  whisper-cache:
+  bot-ru:
+    build: .
+    restart: unless-stopped
+    env_file: .env.bot-ru
+    tmpfs:
+      - /tmp:size=512M

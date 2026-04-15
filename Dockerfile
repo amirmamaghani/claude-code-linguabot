@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:22-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
@@ -6,9 +6,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev \
     python3-pip \
     python3-venv \
-    espeak-ng \
     build-essential \
     cmake \
+    curl \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -16,26 +17,22 @@ WORKDIR /app
 # Claude Code CLI
 RUN npm install -g @anthropic-ai/claude-code
 
-# Python venv for TTS
-RUN python3 -m venv /app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
-RUN pip install --no-cache-dir \
-    "kokoro>=0.9.4" \
-    "misaki[en,es,fr,ja,zh,hi,it,pt]" \
-    soundfile numpy gtts
-
-# Pre-download Kokoro model
-RUN python3 -c "from kokoro import KPipeline; KPipeline(lang_code='a')"
+# Python TTS
+RUN pip3 install --break-system-packages --no-cache-dir gtts
 
 # Node dependencies
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Pre-download Whisper model + build whisper.cpp
-RUN node -e "require('nodejs-whisper').nodewhisper('/dev/null',{modelName:'base',autoDownloadModelName:'base',whisperOptions:{outputInJson:true}}).catch(()=>{})" || true
+# Build whisper.cpp + download model
+RUN cd node_modules/nodejs-whisper/cpp/whisper.cpp/models && \
+    curl -L -o ggml-base.bin "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin" && \
+    cd .. && cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release
 
 # Copy source and build
-COPY . .
-RUN npm run build
+COPY src/ src/
+COPY python/ python/
+COPY tsconfig.json ./
+RUN npx tsup src/bot.ts --format esm
 
-CMD ["npm", "start"]
+CMD ["node", "dist/bot.js"]
