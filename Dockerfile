@@ -3,6 +3,7 @@ FROM node:20-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     python3 \
+    python3-dev \
     python3-pip \
     python3-venv \
     espeak-ng \
@@ -30,8 +31,8 @@ RUN python3 -c "from kokoro import KPipeline; KPipeline(lang_code='a')"
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Pre-download Whisper model
-RUN npx nodejs-whisper download --model base
+# Pre-download Whisper model + build whisper.cpp
+RUN node -e "require('nodejs-whisper').nodewhisper('/dev/null',{modelName:'base',autoDownloadModelName:'base',whisperOptions:{outputInJson:true}}).catch(()=>{})" || true
 
 # Copy source and build
 COPY . .

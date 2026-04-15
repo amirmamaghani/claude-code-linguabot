@@ -5,11 +5,11 @@ services:
     restart: unless-stopped
     env_file: .env
     volumes:
-      - claude-auth:/root/.claude
+      - ~/.claude:/root/.claude:ro
+      - ~/.claude.json:/root/.claude.json:ro
       - whisper-cache:/root/.cache
     tmpfs:
       - /tmp:size=512M
 
 volumes:
-  claude-auth:
   whisper-cache:

@@ -1,12 +1,16 @@
 import "dotenv/config";
-import { Bot, InputFile } from "grammy";
-import { askClaude } from "./claude-bridge.js";
+import { Bot, type Context, InputFile } from "grammy";
+import { autoRetry } from "@grammyjs/auto-retry";
+import { stream, type StreamFlavor } from "@grammyjs/stream";
+import { askClaudeStream } from "./claude-bridge.js";
 import { tutorPrompt, translatorPrompt, drillsPrompt } from "./prompts.js";
 import { transcribe } from "./stt.js";
 import { synthesize } from "./tts.js";
 import { unlink } from "fs/promises";
 import { createWriteStream } from "fs";
 import { pipeline } from "stream/promises";
+
+type MyContext = StreamFlavor<Context>;
 
 // ── Config ────────────────────────────────────────────────
 
@@ -63,19 +67,14 @@ const state: BotState = {
 
 // ── Text processing ───────────────────────────────────────
 
-function extractSpeakable(response: string): { displayText: string; speakText: string } {
-  if (response.includes("|||SPEAK|||")) {
-    const [display, speak] = response.split("|||SPEAK|||", 2);
-    const cleaned = speak
-      .replace(/[*_`#~\[\]]/g, "")
-      .replace(/\(.*?\)/g, "")
-      .replace(/[\u{1F300}-\u{1FAD6}]/gu, "")
-      .replace(/\|/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-    return { displayText: display.trim(), speakText: cleaned };
-  }
-  return { displayText: response.trim(), speakText: "" };
+function cleanForTTS(text: string): string {
+  return text
+    .replace(/[*_`#~\[\]]/g, "")
+    .replace(/\(.*?\)/g, "")
+    .replace(/[\u{1F300}-\u{1FAD6}]/gu, "")
+    .replace(/\|/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 // ── Prompt builder ────────────────────────────────────────
@@ -94,31 +93,68 @@ function currentPrompt(): string {
   }
 }
 
-// ── Helpers ───────────────────────────────────────────────
+// ── Streaming handler ─────────────────────────────────────
 
-async function handleMessage(text: string): Promise<{ displayText: string; speakText: string }> {
-  const response = await askClaude(text, currentPrompt(), state.claudeSessionId);
-  state.claudeSessionId = response.sessionId;
-  return extractSpeakable(response.text);
-}
+async function handleStreamingMessage(ctx: MyContext, userText: string): Promise<void> {
+  const { chunks, result } = askClaudeStream(userText, currentPrompt(), state.claudeSessionId);
 
-async function sendReply(
-  ctx: { reply: (t: string, o?: object) => Promise<unknown>; replyWithVoice: (f: InputFile) => Promise<unknown> },
-  displayText: string,
-  speakText: string
-): Promise<void> {
-  await ctx.reply(displayText, { parse_mode: "Markdown" }).catch(() =>
-    ctx.reply(displayText)
-  );
+  // Stream display text to Telegram, stop before |||SPEAK|||
+  let fullText = "";
+  let hitSeparator = false;
 
-  if (state.voiceReplies && speakText) {
-    const audioPath = await synthesize(speakText, state.targetLang);
-    await ctx.replyWithVoice(new InputFile(audioPath));
-    await unlink(audioPath).catch(() => {});
+  async function* displayChunks(): AsyncGenerator<string> {
+    for await (const chunk of chunks) {
+      fullText += chunk;
+
+      if (fullText.includes("|||SPEAK|||")) {
+        // Yield only the part before the separator
+        const sepIndex = fullText.indexOf("|||SPEAK|||");
+        const beforeSep = fullText.slice(0, sepIndex);
+        const alreadyYielded = fullText.length - chunk.length;
+        if (sepIndex > alreadyYielded) {
+          yield fullText.slice(alreadyYielded, sepIndex);
+        }
+        hitSeparator = true;
+        // Keep consuming chunks but don't yield (they're for TTS)
+        continue;
+      }
+
+      if (!hitSeparator) {
+        yield chunk;
+      }
+    }
+  }
+
+  const messages = await ctx.replyWithStream(displayChunks());
+
+  // Edit final message with Markdown formatting
+  for (const msg of messages) {
+    if (msg.text) {
+      await ctx.api.editMessageText(ctx.chat!.id, msg.message_id, msg.text, {
+        parse_mode: "Markdown",
+      }).catch(() => {}); // keep plain text if Markdown fails
+    }
+  }
+
+  // Wait for Claude to finish and get session ID
+  const claudeResult = await result;
+  state.claudeSessionId = claudeResult.sessionId;
+
+  // Extract speakable text and send voice
+  if (state.voiceReplies && fullText.includes("|||SPEAK|||")) {
+    const speakPart = fullText.split("|||SPEAK|||")[1] || "";
+    const speakText = cleanForTTS(speakPart);
+    if (speakText) {
+      const audioPath = await synthesize(speakText, state.targetLang);
+      await ctx.replyWithVoice(new InputFile(audioPath));
+      await unlink(audioPath).catch(() => {});
+    }
   }
 }
 
-async function downloadFile(bot: Bot, fileId: string, dest: string): Promise<void> {
+// ── Helpers ───────────────────────────────────────────────
+
+async function downloadFile(bot: Bot<MyContext>, fileId: string, dest: string): Promise<void> {
   const file = await bot.api.getFile(fileId);
   const url = `https://api.telegram.org/file/bot${bot.token}/${file.file_path}`;
   const res = await fetch(url);
@@ -141,7 +177,11 @@ if (!OWNER_ID) {
   process.exit(1);
 }
 
-const bot = new Bot(TOKEN);
+const bot = new Bot<MyContext>(TOKEN);
+
+// Plugins
+bot.api.config.use(autoRetry());
+bot.use(stream());
 
 // Auth guard
 bot.use(async (ctx, next) => {
@@ -165,8 +205,7 @@ bot.on("message:voice", async (ctx) => {
 
     if (!text) return ctx.reply("Couldn't understand that. Try again or type your message.");
 
-    const { displayText, speakText } = await handleMessage(text);
-    await sendReply(ctx, displayText, speakText);
+    await handleStreamingMessage(ctx, text);
   } catch (err) {
     console.error("Voice handler error:", err);
     await ctx.reply("Something went wrong. Try again.");
@@ -183,9 +222,7 @@ bot.on("message:text", async (ctx) => {
   state.busy = true;
 
   try {
-    await ctx.replyWithChatAction("typing");
-    const { displayText, speakText } = await handleMessage(ctx.message.text);
-    await sendReply(ctx, displayText, speakText);
+    await handleStreamingMessage(ctx, ctx.message.text);
   } catch (err) {
     console.error("Text handler error:", err);
     await ctx.reply("Something went wrong. Try again.");
@@ -342,8 +379,15 @@ bot.command("help", (ctx) =>
   )
 );
 
+// ── Error handling ────────────────────────────────────────
+
+bot.catch((err) => {
+  console.error("Bot error:", err);
+});
+
 // ── Start ─────────────────────────────────────────────────
 
 bot.start({
+  drop_pending_updates: true,
   onStart: () => console.log("LinguaBot running"),
 });
