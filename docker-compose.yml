@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     env_file: .env.bot-amir
     volumes:
-      - /root/.claude/.credentials.json:/root/.claude/.credentials.json:ro
+      - /opt/linguabot-claude/bot-amir:/root/.claude
       - /opt/linguabot-db/bot-amir:/app/db
     tmpfs:
       - /tmp:size=512M
@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     env_file: .env.bot-ru
     volumes:
-      - /root/.claude/.credentials.json:/root/.claude/.credentials.json:ro
+      - /opt/linguabot-claude/bot-ru:/root/.claude
       - /opt/linguabot-db/bot-ru:/app/db
     tmpfs:
       - /tmp:size=512M
