@@ -22,6 +22,7 @@ export function askClaudeStream(
     "--verbose",
     "--model", "sonnet",
     "--tools", "none",
+    "--disable-slash-commands",
     "--system-prompt", systemPrompt,
   ];
 
@@ -31,6 +32,7 @@ export function askClaudeStream(
 
   const proc = spawn("claude", args, {
     stdio: ["pipe", "pipe", "pipe"],
+    cwd: "/tmp",
   });
 
   proc.stdin.write(message);

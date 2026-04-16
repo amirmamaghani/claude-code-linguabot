@@ -596,25 +596,47 @@ bot.command("lessons", (ctx) => {
     return ctx.reply(`No curriculum found for ${t?.name || state.targetLang}. Add YAML files to data/curriculum/${state.targetLang}/`);
   }
 
-  let text = `Lessons: ${t?.flag || ""} ${t?.name || state.targetLang}\n\n`;
-  let currentLevel = "";
-
-  for (const lesson of allLessons) {
-    if (lesson.level !== currentLevel) {
-      currentLevel = lesson.level;
-      text += `\n${currentLevel}:\n`;
-    }
-
+  const buttons = allLessons.map((lesson) => {
     const icon = lesson.status === "completed" ? "\u2705" :
                  lesson.status === "in_progress" ? "\u{1F4D6}" :
                  lesson.status === "available" ? "\u{1F513}" : "\u{1F512}";
-    const scoreStr = lesson.score !== null ? ` (${lesson.score}%)` : "";
-    text += `${icon} ${lesson.title}${scoreStr}\n`;
+    const scoreStr = lesson.score !== null ? ` ${lesson.score}%` : "";
+    return [{ text: `${icon} ${lesson.title}${scoreStr}`, callback_data: `jump:${lesson.id}` }];
+  });
+
+  return ctx.reply(`Lessons: ${t?.flag || ""} ${t?.name || state.targetLang}\n\nTap a lesson to jump to it:`, {
+    reply_markup: { inline_keyboard: buttons },
+  });
+});
+
+bot.callbackQuery(/^jump:(.+)$/, async (ctx) => {
+  const lessonId = ctx.match![1];
+  const lesson = getLesson(lessonId);
+  if (!lesson) return ctx.answerCallbackQuery("Lesson not found");
+
+  // Unlock and start the lesson regardless of current status
+  if (lesson.status === "locked") {
+    startLesson(lessonId);
+  }
+  advancePhase(lessonId, 0);
+
+  state.activeLessonId = lessonId;
+  state.claudeSessionId = undefined;
+
+  const lessonData = getLessonData(lessonId);
+  const phase = lessonData?.phases[0];
+  if (phase) {
+    state.mode = phase.mode;
+    if (phase.category) state.drillCategory = phase.category;
   }
 
-  text += `\n\u2705 = done  \u{1F4D6} = in progress  \u{1F513} = available  \u{1F512} = locked`;
-
-  return ctx.reply(text);
+  await ctx.answerCallbackQuery(`Jumped to: ${lesson.title}`);
+  await ctx.editMessageText(
+    `Lesson: ${lesson.title}${lesson.title_native ? ` (${lesson.title_native})` : ""}\n` +
+    `Phase 1/${lessonData?.phases.length || "?"}: ${phase?.mode.toUpperCase() || "TUTOR"}\n\n` +
+    `${phase?.instruction || "Start the lesson."}\n\n` +
+    `Send a message to begin!`
+  );
 });
 
 bot.command("vocab", (ctx) => {
@@ -745,7 +767,7 @@ bot.command("help", (ctx) =>
     `Lessons:\n` +
     `/lesson — Start / continue current lesson\n` +
     `/next_phase — Advance to next lesson phase\n` +
-    `/lessons — View all lessons and progress\n\n` +
+    `/lessons — View all lessons (tap to jump)\n\n` +
     `Progress:\n` +
     `/progress — Dashboard with stats\n` +
     `/vocab — View vocabulary due for review\n` +
