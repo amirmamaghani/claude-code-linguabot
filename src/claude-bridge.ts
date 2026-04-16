@@ -20,8 +20,8 @@ export function askClaudeStream(
     "-p",
     "--output-format", "stream-json",
     "--verbose",
-    "--bare",
     "--model", "sonnet",
+    "--tools", "none",
     "--system-prompt", systemPrompt,
   ];
 

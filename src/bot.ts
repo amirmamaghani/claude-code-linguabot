@@ -261,49 +261,10 @@ bot.use(async (ctx, next) => {
   await next();
 });
 
-// ── Voice handler ─────────────────────────────────────────
-
-bot.on("message:voice", async (ctx) => {
-  if (state.busy) return ctx.reply("Still thinking about your last message...");
-  state.busy = true;
-
-  try {
-    const oggPath = `/tmp/voice_${Date.now()}.ogg`;
-    await downloadFile(bot, ctx.message.voice.file_id, oggPath);
-
-    await ctx.replyWithChatAction("typing");
-    const text = await transcribe(oggPath);
-    await unlink(oggPath).catch(() => {});
-
-    if (!text) return ctx.reply("Couldn't understand that. Try again or type your message.");
-
-    await handleStreamingMessage(ctx, text);
-  } catch (err) {
-    console.error("Voice handler error:", err);
-    await ctx.reply("Something went wrong. Try again.");
-  } finally {
-    state.busy = false;
-  }
-});
-
-// ── Text handler ──────────────────────────────────────────
-
-bot.on("message:text", async (ctx) => {
-  if (ctx.message.text.startsWith("/")) return;
-  if (state.busy) return ctx.reply("Still thinking...");
-  state.busy = true;
-
-  try {
-    await handleStreamingMessage(ctx, ctx.message.text);
-  } catch (err) {
-    console.error("Text handler error:", err);
-    await ctx.reply("Something went wrong. Try again.");
-  } finally {
-    state.busy = false;
-  }
-});
-
-// ── Original Commands ────────────────────────────────────
+// ── Commands ─────────────────────────────────────────────
+// NOTE: Commands MUST be registered before message handlers (voice/text)
+// because grammY runs handlers in registration order and bot.on("message:text")
+// would match commands first and swallow them.
 
 bot.command("start", (ctx) => {
   const t = LANGUAGES[state.targetLang];
@@ -793,6 +754,47 @@ bot.command("help", (ctx) =>
     `/help — This message`
   )
 );
+
+// ── Voice handler ─────────────────────────────────────────
+
+bot.on("message:voice", async (ctx) => {
+  if (state.busy) return ctx.reply("Still thinking about your last message...");
+  state.busy = true;
+
+  try {
+    const oggPath = `/tmp/voice_${Date.now()}.ogg`;
+    await downloadFile(bot, ctx.message.voice.file_id, oggPath);
+
+    await ctx.replyWithChatAction("typing");
+    const text = await transcribe(oggPath);
+    await unlink(oggPath).catch(() => {});
+
+    if (!text) return ctx.reply("Couldn't understand that. Try again or type your message.");
+
+    await handleStreamingMessage(ctx, text);
+  } catch (err) {
+    console.error("Voice handler error:", err);
+    await ctx.reply("Something went wrong. Try again.");
+  } finally {
+    state.busy = false;
+  }
+});
+
+// ── Text handler ──────────────────────────────────────────
+
+bot.on("message:text", async (ctx) => {
+  if (state.busy) return ctx.reply("Still thinking...");
+  state.busy = true;
+
+  try {
+    await handleStreamingMessage(ctx, ctx.message.text);
+  } catch (err) {
+    console.error("Text handler error:", err);
+    await ctx.reply("Something went wrong. Try again.");
+  } finally {
+    state.busy = false;
+  }
+});
 
 // ── Error handling ────────────────────────────────────────
 

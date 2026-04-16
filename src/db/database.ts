@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import { existsSync, mkdirSync } from "fs";
 import { dirname } from "path";
 
-const DB_PATH = process.env.DB_PATH || "./data/linguabot.db";
+const DB_PATH = process.env.DB_PATH || "./db/linguabot.db";
 
 // Ensure data directory exists
 const dir = dirname(DB_PATH);
