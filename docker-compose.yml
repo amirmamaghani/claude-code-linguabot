@@ -3,6 +3,9 @@ services:
     build: .
     restart: unless-stopped
     env_file: .env.bot-amir
+    volumes:
+      - /root/.claude/.credentials.json:/root/.claude/.credentials.json:ro
+      - bot-amir-data:/app/data
     tmpfs:
       - /tmp:size=512M
 
@@ -10,5 +13,12 @@ services:
     build: .
     restart: unless-stopped
     env_file: .env.bot-ru
+    volumes:
+      - /root/.claude/.credentials.json:/root/.claude/.credentials.json:ro
+      - bot-ru-data:/app/data
     tmpfs:
       - /tmp:size=512M
+
+volumes:
+  bot-amir-data:
+  bot-ru-data:

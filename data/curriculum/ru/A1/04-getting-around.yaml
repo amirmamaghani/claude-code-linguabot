@@ -1,0 +1,70 @@
+id: ru-a1-04
+module: A1
+order: 4
+title: "Как добраться"
+title_native: "Ako sa dostanem"
+description: "Orientácia v meste, doprava, pýtanie sa na cestu"
+
+objectives:
+  - Opýtať sa kde niečo je
+  - Porozumieť základným smerom
+  - Používať dopravné prostriedky
+
+vocabulary:
+  - word: "где"
+    pronunciation: "gdě"
+    translation: "kde"
+  - word: "здесь"
+    pronunciation: "zděsʼ"
+    translation: "tu"
+  - word: "там"
+    pronunciation: "tam"
+    translation: "tam"
+  - word: "налево"
+    pronunciation: "naléva"
+    translation: "doľava"
+  - word: "направо"
+    pronunciation: "napráva"
+    translation: "doprava"
+  - word: "прямо"
+    pronunciation: "prjáma"
+    translation: "rovno"
+  - word: "метро"
+    pronunciation: "mitró"
+    translation: "metro"
+  - word: "автобус"
+    pronunciation: "aftóbus"
+    translation: "autobus"
+  - word: "улица"
+    pronunciation: "úlica"
+    translation: "ulica"
+  - word: "далеко"
+    pronunciation: "dalekó"
+    translation: "ďaleko"
+
+grammar:
+  - concept: "Где + miesto?"
+    explanation: "Где метро? (Kde je metro?) Где автобус? (Kde je autobus?)"
+  - concept: "Идите + smer"
+    explanation: "Идите прямо (Choďte rovno), Идите налево (Choďte doľava)"
+
+phrases:
+  - native: "Kde je metro?"
+    target: "Где метро?"
+  - native: "Choďte rovno a potom doľava"
+    target: "Идите прямо, потом налево"
+  - native: "Je to ďaleko?"
+    target: "Это далеко?"
+  - native: "Kde je autobusová zastávka?"
+    target: "Где автобусная остановка?"
+
+phases:
+  - mode: tutor
+    instruction: "Uč slovnú zásobu smerovania. Použi príklady z navigácie v ruskom meste."
+  - mode: drills
+    category: directions
+    instruction: "Daj pokyny a študent ich preloží. Potom naopak — študent sa pýta na cestu."
+  - mode: tutor
+    instruction: "Roleplay: študent je turista v Moskve, pýta sa miestnych na cestu."
+
+pass_score: 70

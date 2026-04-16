@@ -1,0 +1,82 @@
+id: ru-a1-01
+module: A1
+order: 1
+title: "Первый контакт"
+title_native: "Prvý kontakt"
+description: "Základné pozdravy, predstavenie sa, opýtať sa ako sa máš"
+
+objectives:
+  - Pozdraviť formálne aj neformálne
+  - Predstaviť sa menom
+  - Opýtať sa "ako sa máš" a odpovedať
+
+vocabulary:
+  - word: "привет"
+    pronunciation: "privét"
+    translation: "ahoj"
+    usage: "neformálny pozdrav medzi priateľmi"
+  - word: "здравствуйте"
+    pronunciation: "zdrástvujtje"
+    translation: "dobrý deň"
+    usage: "formálny pozdrav, vykanie"
+  - word: "меня зовут"
+    pronunciation: "menjá zavút"
+    translation: "volám sa"
+    usage: "predstavenie sa"
+  - word: "как дела"
+    pronunciation: "kak dilá"
+    translation: "ako sa máš"
+    usage: "neformálne, s priateľmi"
+  - word: "хорошо"
+    pronunciation: "charašó"
+    translation: "dobre"
+    usage: "odpoveď na ako sa máš"
+  - word: "спасибо"
+    pronunciation: "spasíba"
+    translation: "ďakujem"
+    usage: "poďakovanie"
+  - word: "пожалуйста"
+    pronunciation: "pažálusta"
+    translation: "prosím / niet za čo"
+    usage: "zdvorilosť alebo odpoveď na ďakujem"
+  - word: "до свидания"
+    pronunciation: "da svidánija"
+    translation: "dovidenia"
+    usage: "formálne rozlúčenie"
+  - word: "пока"
+    pronunciation: "paká"
+    translation: "čau / ahoj (na rozlúčku)"
+    usage: "neformálne rozlúčenie"
+  - word: "очень приятно"
+    pronunciation: "óčeň prijátna"
+    translation: "veľmi ma teší"
+    usage: "pri zoznámení"
+
+grammar:
+  - concept: "Ты vs Вы"
+    explanation: "ты = tykanie (priatelia, rodina), вы = vykanie (formálne, neznámi) alebo plurál"
+  - concept: "Меня зовут + meno"
+    explanation: "Doslovne 'mňa volajú'. Meno ide na koniec: Меня зовут Амир"
+
+phrases:
+  - native: "Ahoj, ako sa máš?"
+    target: "Привет, как дела?"
+  - native: "Dobrý deň, volám sa Amir"
+    target: "Здравствуйте, меня зовут Амир"
+  - native: "Dobre, ďakujem. A ty?"
+    target: "Хорошо, спасибо. А ты?"
+  - native: "Veľmi ma teší"
+    target: "Очень приятно"
+  - native: "Dovidenia"
+    target: "До свидания"
+
+phases:
+  - mode: tutor
+    instruction: "Predstav slovnú zásobu pozdravov. Začni neformálne (привет), potom formálne (здравствуйте). Uč cez konverzáciu."
+  - mode: drills
+    category: greetings
+    instruction: "Precvič frázy z vocabulary. Zameraj sa na správny výber ты/вы formy."
+  - mode: tutor
+    instruction: "Roleplay: stretnutie nového človeka. Najprv formálne, potom neformálny rozhovor s kamarátom."
+
+pass_score: 70

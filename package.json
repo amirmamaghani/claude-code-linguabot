@@ -4,17 +4,21 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/bot.ts",
-    "build": "tsup src/bot.ts --format esm",
+    "build": "tsup src/bot.ts --format esm --external better-sqlite3",
     "start": "node dist/bot.js"
   },
   "dependencies": {
     "@grammyjs/auto-retry": "^2.0.2",
     "@grammyjs/stream": "^1.0.1",
+    "better-sqlite3": "^12.9.0",
     "dotenv": "^16.4.0",
     "grammy": "^1.30.0",
+    "js-yaml": "^4.1.1",
     "nodejs-whisper": "^0.3.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
     "tsx": "^4.19.0",

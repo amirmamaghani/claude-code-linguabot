@@ -1,0 +1,74 @@
+id: ru-a1-03
+module: A1
+order: 3
+title: "В кафе"
+title_native: "V kaviarni"
+description: "Objednávanie jedla a nápojov, prosba o účet"
+
+objectives:
+  - Objednať si jedlo a nápoj
+  - Požiadať o účet
+  - Povedať čo chutí / nechutí
+
+vocabulary:
+  - word: "кофе"
+    pronunciation: "kófe"
+    translation: "káva"
+  - word: "чай"
+    pronunciation: "čaj"
+    translation: "čaj"
+  - word: "вода"
+    pronunciation: "vadá"
+    translation: "voda"
+  - word: "хлеб"
+    pronunciation: "chleb"
+    translation: "chlieb"
+  - word: "суп"
+    pronunciation: "sup"
+    translation: "polievka"
+  - word: "я хочу"
+    pronunciation: "ja chačú"
+    translation: "chcem"
+    usage: "vyjadrenie priania"
+  - word: "можно"
+    pronunciation: "móžna"
+    translation: "môžem / je možné"
+    usage: "zdvorilá prosba"
+  - word: "счёт"
+    pronunciation: "ščot"
+    translation: "účet"
+  - word: "вкусно"
+    pronunciation: "fkúsna"
+    translation: "chutné"
+  - word: "меню"
+    pronunciation: "minjú"
+    translation: "jedálny lístok"
+
+grammar:
+  - concept: "Я хочу + podstatné meno"
+    explanation: "Ja chačú + čo chcete: Я хочу кофе (chcem kávu). Zdvorilejšie: Можно кофе? (Môžem kávu?)"
+  - concept: "Можно + účet/prosba"
+    explanation: "Можно счёт? = Môžem účet? Univerzálne zdvorilé slovo pre prosbu."
+
+phrases:
+  - native: "Chcel by som kávu, prosím"
+    target: "Можно кофе, пожалуйста"
+  - native: "Čo odporúčate?"
+    target: "Что вы рекомендуете?"
+  - native: "Je to veľmi chutné"
+    target: "Это очень вкусно"
+  - native: "Účet, prosím"
+    target: "Счёт, пожалуйста"
+  - native: "Chcem polievku a chlieb"
+    target: "Я хочу суп и хлеб"
+
+phases:
+  - mode: tutor
+    instruction: "Predstav slovnú zásobu jedla a nápojov. Uč Можно + prosba ako hlavný vzor."
+  - mode: drills
+    category: restaurant
+    instruction: "Precvič objednávanie: daj studentovi situáciu, nech odpovie po rusky."
+  - mode: tutor
+    instruction: "Roleplay: si čašník, študent si objednáva. Potom vymeň role."
+
+pass_score: 70

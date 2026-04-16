@@ -29,10 +29,11 @@ RUN cd node_modules/nodejs-whisper/cpp/whisper.cpp/models && \
     curl -L -o ggml-base.bin "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin" && \
     cd .. && cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release
 
-# Copy source and build
+# Copy source, curriculum, and build
 COPY src/ src/
 COPY python/ python/
+COPY data/ data/
 COPY tsconfig.json ./
-RUN npx tsup src/bot.ts --format esm
+RUN npx tsup src/bot.ts --format esm --external better-sqlite3
 
 CMD ["node", "dist/bot.js"]

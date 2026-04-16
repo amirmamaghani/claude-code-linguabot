@@ -1,0 +1,70 @@
+id: ru-a1-02
+module: A1
+order: 2
+title: "Числа и время"
+title_native: "Čísla a čas"
+description: "Čísla 1-20, hodiny, dni v týždni"
+
+objectives:
+  - Počítať od 1 do 20
+  - Opýtať sa koľko je hodín
+  - Povedať dni v týždni
+
+vocabulary:
+  - word: "один"
+    pronunciation: "adín"
+    translation: "jeden"
+  - word: "два"
+    pronunciation: "dva"
+    translation: "dva"
+  - word: "три"
+    pronunciation: "tri"
+    translation: "tri"
+  - word: "четыре"
+    pronunciation: "čitýrje"
+    translation: "štyri"
+  - word: "пять"
+    pronunciation: "pjať"
+    translation: "päť"
+  - word: "десять"
+    pronunciation: "djésjať"
+    translation: "desať"
+  - word: "двадцать"
+    pronunciation: "dvácat'"
+    translation: "dvadsať"
+  - word: "который час"
+    pronunciation: "katóryj čas"
+    translation: "koľko je hodín"
+  - word: "понедельник"
+    pronunciation: "panidéľnik"
+    translation: "pondelok"
+  - word: "сегодня"
+    pronunciation: "sivódnja"
+    translation: "dnes"
+
+grammar:
+  - concept: "Čísla 1-10"
+    explanation: "один, два, три, четыре, пять, шесть, семь, восемь, девять, десять"
+  - concept: "Который час?"
+    explanation: "Odpoveď: Сейчас два часа (teraz sú 2 hodiny). Час sa mení podľa čísla: час (1), часа (2-4), часов (5+)"
+
+phrases:
+  - native: "Koľko je hodín?"
+    target: "Который час?"
+  - native: "Teraz sú tri hodiny"
+    target: "Сейчас три часа"
+  - native: "Dnes je pondelok"
+    target: "Сегодня понедельник"
+  - native: "Mám päť"
+    target: "У меня пять"
+
+phases:
+  - mode: tutor
+    instruction: "Uč čísla 1-10, potom 11-20. Používaj príklady z bežného života (vek, cena, čas)."
+  - mode: drills
+    category: numbers
+    instruction: "Rýchle drill na čísla — povedz po rusky. Striedaj jednoduché (1-10) a ťažšie (11-20)."
+  - mode: tutor
+    instruction: "Konverzácia o čase a dňoch. Opýtaj sa studenta čo robí v ktorý deň."
+
+pass_score: 70

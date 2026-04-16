@@ -1,0 +1,70 @@
+id: ru-a1-05
+module: A1
+order: 5
+title: "В магазине"
+title_native: "V obchode"
+description: "Nakupovanie, pýtanie sa na cenu, veľkosti"
+
+objectives:
+  - Opýtať sa koľko niečo stojí
+  - Povedať čo hľadám
+  - Základné nakupovanie
+
+vocabulary:
+  - word: "сколько стоит"
+    pronunciation: "skóľka stóit"
+    translation: "koľko to stojí"
+  - word: "дорого"
+    pronunciation: "dóraga"
+    translation: "drahé"
+  - word: "дёшево"
+    pronunciation: "djóševa"
+    translation: "lacné"
+  - word: "рубль"
+    pronunciation: "rubľ"
+    translation: "rubeľ"
+  - word: "магазин"
+    pronunciation: "magazín"
+    translation: "obchod"
+  - word: "я ищу"
+    pronunciation: "ja iščú"
+    translation: "hľadám"
+  - word: "размер"
+    pronunciation: "razmér"
+    translation: "veľkosť"
+  - word: "большой"
+    pronunciation: "baľšój"
+    translation: "veľký"
+  - word: "маленький"
+    pronunciation: "máliňkij"
+    translation: "malý"
+  - word: "я возьму"
+    pronunciation: "ja vazʼmú"
+    translation: "vezmem si"
+
+grammar:
+  - concept: "Сколько стоит + predmet"
+    explanation: "Сколько стоит это? (Koľko to stojí?) Сколько стоит кофе? (Koľko stojí káva?)"
+  - concept: "Прилагательные — veľký/malý"
+    explanation: "большой/маленький sa menia podľa rodu: большая сумка (veľká taška), большой магазин (veľký obchod)"
+
+phrases:
+  - native: "Koľko to stojí?"
+    target: "Сколько это стоит?"
+  - native: "Je to príliš drahé"
+    target: "Это слишком дорого"
+  - native: "Hľadám veľkosť M"
+    target: "Я ищу размер М"
+  - native: "Vezmem si toto"
+    target: "Я возьму это"
+
+phases:
+  - mode: tutor
+    instruction: "Uč nakupovanie — ceny, veľkosti, výber. Používaj reálne príklady z ruských obchodov."
+  - mode: drills
+    category: shopping
+    instruction: "Nákupné situácie: pýtaj sa na cenu, vyberaj veľkosť, rozhoduj sa."
+  - mode: tutor
+    instruction: "Roleplay: na trhu v Rusku. Študent nakupuje suveníry, zmýšľa o cenách."
+
+pass_score: 70

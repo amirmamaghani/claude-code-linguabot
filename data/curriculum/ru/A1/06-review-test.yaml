@@ -1,0 +1,54 @@
+id: ru-a1-06
+module: A1
+order: 6
+title: "Повторение A1"
+title_native: "Opakovanie A1"
+description: "Opakovanie všetkej A1 slovnej zásoby a fráz, záverečný test"
+
+objectives:
+  - Zopakovať pozdravy a predstavenie
+  - Zopakovať čísla a čas
+  - Zopakovať situácie v kaviarni, na ulici, v obchode
+  - Dosiahnuť 70%+ na záverečnom teste
+
+vocabulary:
+  - word: "повторение"
+    pronunciation: "paftarjénije"
+    translation: "opakovanie"
+  - word: "экзамен"
+    pronunciation: "ekzámen"
+    translation: "skúška"
+  - word: "я готов"
+    pronunciation: "ja gatóf"
+    translation: "som pripravený"
+  - word: "я не понимаю"
+    pronunciation: "ja ně panimáju"
+    translation: "nerozumiem"
+  - word: "повторите"
+    pronunciation: "paftaríťe"
+    translation: "zopakujte"
+
+grammar:
+  - concept: "Opakovanie ты/вы"
+    explanation: "Zhrnutie všetkých formálnych a neformálnych foriem z A1"
+  - concept: "Opakovanie Можно/Я хочу"
+    explanation: "Zhrnutie spôsobov vyjadrenia prosby a priania"
+
+phrases:
+  - native: "Nerozumiem, zopakujte prosím"
+    target: "Я не понимаю, повторите, пожалуйста"
+  - native: "Som pripravený na test"
+    target: "Я готов к экзамену"
+  - native: "Môžete hovoriť pomalšie?"
+    target: "Можете говорить медленнее?"
+
+phases:
+  - mode: tutor
+    instruction: "Zhrnutie A1 — prejdi všetky témy formou konverzácie. Pripomeň kľúčovú slovnú zásobu."
+  - mode: drills
+    category: general
+    instruction: "Mixovaný drill zo všetkých A1 tém. 15 fráz, score rozhoduje o dokončení A1."
+  - mode: tutor
+    instruction: "Záverečný rozhovor: simulácia prvého dňa v Rusku — použitie všetkého naučeného."
+
+pass_score: 70
